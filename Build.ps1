@@ -1,7 +1,16 @@
 ﻿param ([string]$BuildID='xxxxx', [string]$Rollback='False',[string]$Product,[string]$Test = 'True')
 
-Set-Location $PSScriptRoot
+#Set-Location $PSScriptRoot
 
+    #change the location to the MarTech folder
+
+$pathdd = ""
+split-path $(get-location)|Set-Variable "pathdd"
+#write-host 'parent directory is ' $pathdd
+$RepoPath = $pathdd + '\Martech'
+#write-host 'repo directory is ' $RepoPath
+
+Set-Location $RepoPath
     #enter the ID of the build/release. This will appear in all the scripts being run as part of this build.
 
 #$BuildID = "MAR-23"
