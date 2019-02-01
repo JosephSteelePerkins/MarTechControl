@@ -1,6 +1,6 @@
-﻿param ([string]$BranchID='None',[string]$ControlFile)
+﻿#param ([string]$BranchID='None',[string]$ControlFile)
 
-#$BranchID = 'None'
+$BranchID = 'Development'
 #$ControlFile = 'C:\MarTechControlFiles\Systest.txt'
 
     #first prepare the log file.
