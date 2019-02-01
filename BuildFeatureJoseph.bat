@@ -7,6 +7,6 @@ REM what branch needs to be pulled?
 REM - n/a
 
 REM what IDs need to be built?
-Powershell.exe -executionpolicy remotesigned -file Build.ps1 -Environment Diamond -Test false -Rollback false -ControlFile C:\MarTechControlFiles\Integration.txt
+Powershell.exe -executionpolicy remotesigned -file Build.ps1 -Environment Diamond -Test false -Rollback false -BuildID MAR101
 
 pause

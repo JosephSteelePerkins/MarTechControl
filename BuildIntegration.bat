@@ -4,8 +4,8 @@ Powershell.exe -executionpolicy remotesigned -file RestoreFromBackup.ps1 -FromBa
 
 REM what branch needs to be pulled?
 
+Powershell.exe -executionpolicy remotesigned -file GitPull.ps1 -BranchID Development
+
 REM what IDs need to be built?
 
-Powershell.exe -executionpolicy remotesigned -file Build.ps1 -BuildID MAR-23 -Environment Diamond -Test False -Rollback false
-
-Powershell.exe -executionpolicy remotesigned -file Build.ps1 -BuildID MAR-24 -Environment Diamond -Test False -Rollback false
+Powershell.exe -executionpolicy remotesigned -file Build.ps1 -ControlFile C:\MarTechControlFiles\Integration.txt -Environment Diamond -Test False -Rollback false
