@@ -1,9 +1,13 @@
-﻿param ([string]$BranchID='None',[string]$ControlFile)
+﻿#param ([string]$BranchID='None',[string]$ControlFile)
 
-#$BranchID = 'None'
-#$ControlFile = 'C:\MarTechControlFiles\Systest.txt'
+$BranchID = 'None'
+$ControlFile = 'C:\MarTechControlFiles\Systest.txt'
+
+
+
 
     #first prepare the log file.
+
 
 $LogFileName = 'Log_GitPull_' +  $(get-date).ToString("yyyyMMdd_HHmmss") + ".txt"
 $LogFileNameFull = "C:\MarTechLog\" + $LogFileName
@@ -60,12 +64,12 @@ exit}
 
 
 
+$ErrorActionPreference = "continue"
+
+
 #the only safe way to do this is to delete the repository, re-clone it and checkout the branch
 
 #first set the location to the parent directory
-$ErrorActionPreference = "stop"
-try
-{
 
 Set-Location $PSScriptRoot
 $pathdd = ""
@@ -74,41 +78,29 @@ $RepoPath = $pathdd + '\Martech'
 Set-Location $pathdd
 
 #then delete the repo if it already exists
-Remove-Item –path $RepoPath –recurse -Force
-}
-catch
-{
-if ($_ -notlike "cannot find path*")
-{
-Add-Content $LogFileNameFull $_
-exit
-}
-}
+rmdir $RepoPath -ErrorAction Ignore
 
-#then re-clone the repository
 
-$GitError = "d"
+$RepoPath = $pathdd + '\Martech'
+Set-Location $pathdd
 
-$ErrorActionPreference = "continue"
 
-$outputm = git clone git@github.com:JosephSteelePerkins/MarTech.git 2>&1
-$GitError = $outputm | Select-String  -Pattern "fatal"
+git fetch
 
-if ($GitError)
-{
-Add-Content $LogFileNameFull $GitError
-exit
-}
+#incase there are local changes, remove them with a reset
 
-Set-Location $RepoPath
+git add .
+git reset --hard head
 
 
 #then checkout  branch
+#we need to look at the output of this git statement. It will determine what we do next
 
-$outputm = git checkout -b $BranchID origin/$BranchID 2>&1
+$outputm = git checkout -b $BranchID 2>&1
+
+
+   #check to see if there is a fatal git error
 $GitError = $outputm | Select-String  -Pattern "fatal"
-
-#check to see if there is a fatal git error
 
  
 if (! $GitError )
@@ -116,8 +108,15 @@ if (! $GitError )
     #if there is not then add success to the log
 $currentb = git status 2>&1
 Add-Content $LogFileNameFull 'Success'
-Add-Content $LogFileNameFull  $currentb
+Add-Content $LogFileNameFull $currentb
 }
+elseif ($GitError -like "fatal: A branch named * already exists.")
+{
+git checkout $BuildID
+git pull
+$currentb = git status 2>&1
+Add-Content $LogFileNameFull 'Success'
+Add-Content $LogFileNameFull $currentb}
 else
 {
 Add-Content $LogFileNameFull $GitError

@@ -234,7 +234,7 @@ Add-Content $LogFileNameFull ($d.Key + " " + $_)
 
     #if there are no errors then add success to the log file
 
-if ($Errored -eq 0)
+if (!$Errored)
 {
 $SuccessMessage = $LogFileNameBit2 + " was successful"
 Add-Content $LogFileNameFull $SuccessMessage
